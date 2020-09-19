@@ -10,8 +10,8 @@
 
 {% block body %}
 <div>
-<nav class="navbar navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">
+<nav class="navbar navbar-light" style="background-color:#254e7a;">
+    <a class="navbar-brand" href="#" style="color:white;">
         <img src="https://image.winudf.com/v2/image/dGguYWMucHN1LnNjaS5pY3QuSUNUUFNVX2ljb25fMF9mMmE1M2Zi/icon.png?w=170&fakeurl=1" width="30" height="30" class="d-inline-block align-top"
             alt="">
         Sentiment Analysis
@@ -24,11 +24,11 @@
         <form action="/" method="POST">
 
             <div class="form-row mr-3">
-                <div class="col-6 col-md-4">
+                <div class="col">
 
                     <input type="text" class="form-control" name="content" placeholder="Keywords or Hashtag">
                 </div>
-                <div class="col-6 col-md-4">
+                <div class="col">
 
                     <select name="number" class="form-control">
                         <option value="10" type="number" selected>10</option>
@@ -37,7 +37,7 @@
                         <option value="100">100</option>
                     </select>
                 </div>
-                <div class="col-auto">
+                <div class="col">
                     <button type="submit" class="btn btn-primary mb-2">Submit</button>
                 </div>
 
@@ -47,18 +47,22 @@
     </div>
     <div class="col-xs-12 center-block">
         {% if tasks|length < 1 %}
-        <h4 class="text-center">There are no tasks. Create one belows!</h4>
+        <h4 class="text-center">Sentiment Analysis Model by ICT PSU</h4>
         {% else %}
 
         <table class="table" style="font-family: 'Kanit', sans-serif;">
             <tr scope="row">
-                <th>Tweet</th>
-                <th>Sentiment</th>
+                <th style="width: 50;">Tweet</th>
+                <th style="width: 50;">Sentiment</th>
             </tr>
             {% for task in tasks %}
             <tr scope="row">
-                <td>{{ task }}</td>
-                <td></td>
+                <td>{{ task[0] }}</td>
+                {% if task[1] == 1.0 %}
+                <td style="color:red;">Negative</td>
+                {% else %}
+                <td style="color:green;">positive</td>
+                {% endif %}
             </tr>
             {% endfor %}
         </table>
