@@ -1,26 +1,12 @@
-body {
-    margin: 0;
-    font-family: 'Times New Roman', Times, serif;
-}
 
-.content {
-    margin: 0 auto;
-    width: 400px;
-}
-table, td, th {
-    border: 1px solid #aaa;
-}
+@font-face {
+    font-family: 'kanitbold';
+    src: url('/static/css/kanit-bold-webfont.woff2') format('woff2'),
+         url('/static/css/kanit-bold-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
 
-table {
-    border-collapse: collapse;
-    width: 100%;
 }
-
-th {
-    height: 30px;
-}
-
-td {
-    text-align: center;
-    padding: 5px;
+th{
+    font-family: 'kanitbold';
 }

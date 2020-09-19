@@ -1,39 +1,69 @@
-{% extends 'base.html' %}
+{% extends "bootstrap/base.html" %}
 
-{% block head %}
-    <title>Flask</title>
+{% block styles %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@100;300;500&display=swap" rel="stylesheet">
+<!-- CSS only -->
+
 {% endblock %}
 
 {% block body %}
-<div class="content">
-    <h1>Task Master</h1>
-    {% if tasks|length < 1 %}
-    <h4 style="text-align: : center;">There are no tasks. Create one belows!</l></h4>
-    {% else %}
-    <table>
-        <tr>
-            <th>Task</th>
-            <th>Added</th>
-            <th>Actions</th>
-        </tr>
-        {% for task in tasks %}
-        <tr>
-            <td>{{ task.content }}</td>
-            <td>{{ task.date_created.date() }}</td>
-            <td></td>
-            <td>
-                <a href="/delete/{{task.id}}">Delete</a>
-                <br>
-                <a href="/update/{{task.id}}">Update</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-    {% endif %}
-    <form action="/" method="POST">
-        <input type="text" name="content" id="content">
-        <input type="submit" value="Add Task">
+<div>
+<nav class="navbar navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">
+        <img src="https://image.winudf.com/v2/image/dGguYWMucHN1LnNjaS5pY3QuSUNUUFNVX2ljb25fMF9mMmE1M2Zi/icon.png?w=170&fakeurl=1" width="30" height="30" class="d-inline-block align-top"
+            alt="">
+        Sentiment Analysis
+    </a>
+</nav>
+</div>
+<div class="container">
 
-    </form>
+    <div class="col-md-12 align-items-center p-3">
+        <form action="/" method="POST">
+
+            <div class="form-row mr-3">
+                <div class="col-6 col-md-4">
+
+                    <input type="text" class="form-control" name="content" placeholder="Keywords or Hashtag">
+                </div>
+                <div class="col-6 col-md-4">
+
+                    <select name="number" class="form-control">
+                        <option value="10" type="number" selected>10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary mb-2">Submit</button>
+                </div>
+
+            </div>
+
+        </form>
+    </div>
+    <div class="col-xs-12 center-block">
+        {% if tasks|length < 1 %}
+        <h4 class="text-center">There are no tasks. Create one belows!</h4>
+        {% else %}
+
+        <table class="table" style="font-family: 'Kanit', sans-serif;">
+            <tr scope="row">
+                <th>Tweet</th>
+                <th>Sentiment</th>
+            </tr>
+            {% for task in tasks %}
+            <tr scope="row">
+                <td>{{ task }}</td>
+                <td></td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+    </div>
+
 </div>
 {% endblock %}
