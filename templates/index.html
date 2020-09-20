@@ -1,7 +1,8 @@
 {% extends "bootstrap/base.html" %}
 
 {% block styles %}
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
 <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@100;300;500&display=swap" rel="stylesheet">
 <!-- CSS only -->
@@ -9,45 +10,97 @@
 {% endblock %}
 
 {% block body %}
+{% block scripts %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% endblock %}
+
+
 <div>
-<nav class="navbar navbar-light" style="background-color:#254e7a;">
-    <a class="navbar-brand" href="#" style="color:white;">
-        <img src="https://image.winudf.com/v2/image/dGguYWMucHN1LnNjaS5pY3QuSUNUUFNVX2ljb25fMF9mMmE1M2Zi/icon.png?w=170&fakeurl=1" width="30" height="30" class="d-inline-block align-top"
-            alt="">
-        Sentiment Analysis
-    </a>
-</nav>
+    <nav class="navbar navbar-light" style="background-color:#254e7a;">
+        <a class="navbar-brand" href="#" style="color:white;">
+            <img src="https://image.winudf.com/v2/image/dGguYWMucHN1LnNjaS5pY3QuSUNUUFNVX2ljb25fMF9mMmE1M2Zi/icon.png?w=170&fakeurl=1"
+                width="30" height="30" class="d-inline-block align-top" alt="">
+            Sentiment Analysis
+        </a>
+    </nav>
 </div>
+<div>&nbsp;</div>
 <div class="container">
+    <ul class="nav nav-tabs">
+        <li class="nav-item" role="presentiation">
+            <a class="nav-link active" data-toggle="tab" href="#keyword">Keyword</a>
+        </li>
+        <li class="nav-item" role="presentiation">
+            <a class="nav-link" data-toggle="tab" href="#trends">Trends</a>
+        </li>
+    </ul>
+    <div>&nbsp;</div>
+    <div class="tab-content">
+        <div class="tab-pane active" id="keyword">
+            <form action="/" method="POST">
 
-    <div class="col-md-12 align-items-center p-3">
-        <form action="/" method="POST">
+                <div class="form-row mr-3">
+                    <div class="col">
 
-            <div class="form-row mr-3">
-                <div class="col">
+                        <input type="text" class="form-control" name="content" placeholder="Keywords or Hashtag">
+                    </div>
+                    <div class="col">
 
-                    <input type="text" class="form-control" name="content" placeholder="Keywords or Hashtag">
+                        <select name="number" class="form-control">
+                            <option value="10" type="number" selected>10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <button type="submit" class="btn btn-primary mb-2">Submit</button>
+                    </div>
+
                 </div>
-                <div class="col">
 
-                    <select name="number" class="form-control">
-                        <option value="10" type="number" selected>10</option>
-                        <option value="20">20</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
+            </form>
+        </div>
+
+        <div class="tab-pane" id="trends">
+            <form action="/" method="POST">
+
+                <div class="form-row mr-3">
+                    <div class="col">
+                        <select name="content" class="form-control">
+                            {% for trend in trends %}
+                            <option value="{{trend}}">{{trend}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col">
+
+                        <select name="number" class="form-control">
+                            <option value="10" type="number" selected>10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <button type="submit" class="btn btn-primary mb-2">Submit</button>
+                    </div>
+
                 </div>
-                <div class="col">
-                    <button type="submit" class="btn btn-primary mb-2">Submit</button>
-                </div>
 
-            </div>
+            </form>
 
-        </form>
+
+        </div>
     </div>
+
     <div class="col-xs-12 center-block">
         {% if tasks|length < 1 %}
         <h4 class="text-center">Sentiment Analysis Model by ICT PSU</h4>
+
+
         {% else %}
 
         <table class="table" style="font-family: 'Kanit', sans-serif;">

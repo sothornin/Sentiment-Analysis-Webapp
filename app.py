@@ -89,9 +89,16 @@ def delete_stop(word_list):
         #t = ''.join(c[0] for c in itertools.groupby(t))
         filtered_sentence.append(t)
     clean_word.append(','.join(filtered_sentence))
-  return clean_word  
+  return clean_word
 
-
+def twitter_trend(api, n):
+    trends = api.trends_place(23424960)[0]['trends']
+    top_10 = trends[:n]
+    trend_list = []
+    for trend in top_10:
+        trend_list.append(trend['name'])
+    return trend_list
+  
 class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(200), nullable=False)
@@ -103,11 +110,13 @@ class Todo(db.Model):
 
 @app.route('/',methods=['POST','GET'])
 def index():
+    api = tweepy.API(auth,wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
+    top_10 = twitter_trend(api,10)
     if request.method == 'POST':
         tweet_query = request.form['content']
         tweet_number = int(request.form['number'])
         texts = []
-        api = tweepy.API(auth,wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
+        
         search_words = tweet_query
         new_search = search_words + " -filter:retweets"
         search = tweepy.Cursor(api.search, q=new_search, lang="th", tweet_mode="extended").items(tweet_number)
@@ -118,7 +127,6 @@ def index():
         from pythainlp.tag import pos_tag_sents
         pos = pos_tag_sents(word_list,corpus='orchid_ud')
         keep_tag = ['VERB', 'ADJ', 'ADV', 'INTJ', 'AUX']
-        #keep_tag = ['VACT','VATT','ADVN','ADVI','ADVP','ADVS','FIXV','NEG','ADJ','']
         pos_list = []
         for sent in pos:
             dt_tags = [t[0] for t in sent if t[1] in keep_tag]
@@ -136,16 +144,19 @@ def index():
         my_list = []
         for i in range(len(texts)):
             my_list.append([texts[i], pred[i]])
-        return render_template('index.html', tasks = my_list)
+        return render_template('index.html', tasks = my_list, trends = top_10)
         
         
 
     else:
-        tasks = Todo.query.order_by(Todo.date_created).all()
-        return render_template('index.html', tasks = tasks)
+        
+        #tasks = Todo.query.order_by(Todo.date_created).all()
+        top_10 = twitter_trend(api,10)
+        #return top_10[0]
+        return render_template('index.html', tasks = [], trends = top_10)
 
-@app.route('/delete/<int:id>')
-def delete(id):
+@app.route('/search/<string:keyword>')
+def search(id):
     task_to_delete = Todo.query.get_or_404(id)
 
     try:
