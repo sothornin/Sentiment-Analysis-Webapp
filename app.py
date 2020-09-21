@@ -17,6 +17,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import csv
 from flask import send_from_directory
 import pygal
+from pygal.style import Style
 
 app = Flask(__name__)
 app.config['DATASET'] = '/'
@@ -162,11 +163,11 @@ def index():
                 else:
                     pos_count = pos_count + 1
                     thewriter.writerow([texts[i].replace('\n', ''), 'Positive'])
-        
-        pie_chart = pygal.Pie()
+        custom_style = Style(colors=('#800000','#3CB371'))
+        pie_chart = pygal.Pie(style=custom_style)
         pie_chart.title = 'Sentiment ratio'
-        pie_chart.add('Positive', pos_count)
         pie_chart.add('Negative', neg_count)
+        pie_chart.add('Positive', pos_count)
         
         chart_data = pie_chart.render_data_uri()
 
