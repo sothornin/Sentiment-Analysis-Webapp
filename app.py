@@ -13,9 +13,13 @@ import itertools
 import dill as pickle
 from sklearn.linear_model import LogisticRegression
 from sklearn.feature_extraction.text import TfidfVectorizer
+# import tempfile
+import csv
+from flask import send_from_directory
+import pygal
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+app.config['DATASET'] = '/'
 db = SQLAlchemy(app)
 bootstrap = Bootstrap(app)
 
@@ -34,6 +38,8 @@ with open(f'model/tfidf.pickle', 'rb') as f:
 
 with open(f'model/support.pickle', 'rb') as f:
     support = pickle.load(f)
+
+global top_10
 
 def text_cleaning(text):
   #emoji list
@@ -110,6 +116,7 @@ class Todo(db.Model):
 
 @app.route('/',methods=['POST','GET'])
 def index():
+    tasks = []
     api = tweepy.API(auth,wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
     top_10 = twitter_trend(api,10)
     if request.method == 'POST':
@@ -141,10 +148,30 @@ def index():
     
         pred = clf_model.predict(new)
         
+        neg_count = 0
+        pos_count = 0  
         my_list = []
-        for i in range(len(texts)):
-            my_list.append([texts[i], pred[i]])
-        return render_template('index.html', tasks = my_list, trends = top_10)
+        with open("dataset.csv", mode='w', newline='', encoding='utf-8') as f:
+            thewriter = csv.writer(f)
+            thewriter.writerow(["text","sentiment"])
+            for i in range(len(texts)):
+                my_list.append([texts[i], pred[i]])
+                if pred[i] == 1.0:
+                    neg_count = neg_count + 1
+                    thewriter.writerow([texts[i].replace('\n', ''), 'Negative'])
+                else:
+                    pos_count = pos_count + 1
+                    thewriter.writerow([texts[i].replace('\n', ''), 'Positive'])
+        
+        pie_chart = pygal.Pie()
+        pie_chart.title = 'Sentiment ratio'
+        pie_chart.add('Positive', pos_count)
+        pie_chart.add('Negative', neg_count)
+        
+        chart_data = pie_chart.render_data_uri()
+
+
+        return render_template('index.html', tasks = my_list, trends = top_10, keyword = tweet_query, chart = chart_data)
         
         
 
@@ -155,16 +182,30 @@ def index():
         #return top_10[0]
         return render_template('index.html', tasks = [], trends = top_10)
 
-@app.route('/search/<string:keyword>')
-def search(id):
-    task_to_delete = Todo.query.get_or_404(id)
+@app.route('/download')
+def download():
+    return send_from_directory('', filename='dataset.csv', as_attachment=True)
+    # csvf = tempfile.TemporaryFile()
+    # wr = csv.DictWriter(csvf, fields, encoding = 'cp949')
+    # wr.writerow(dict(zip(fields, fields))) #dummy, to explain what each column means
+    # for resp in resps :
+    #     wr.writerow(resp)
+    # wr.close()
+    # csvf.seek(0)  # rewind to the start
 
-    try:
-        db.session.delete(task_to_delete)
-        db.session.commit()
-        return redirect('/')
-    except:
-        return 'There was Error'
+    # send_file(csvf, as_attachment=True, attachment_filename='survey.csv')
+
+
+# @app.route('/search/<string:keyword>')
+# def search(id):
+#     task_to_delete = Todo.query.get_or_404(id)
+
+#     try:
+#         db.session.delete(task_to_delete)
+#         db.session.commit()
+#         return redirect('/')
+#     except:
+#         return 'There was Error'
 
 @app.route('/update/<int:id>', methods=['GET','POST'])
 def update(id):

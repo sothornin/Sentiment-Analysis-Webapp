@@ -19,7 +19,7 @@
 
 <div>
     <nav class="navbar navbar-light" style="background-color:#254e7a;">
-        <a class="navbar-brand" href="#" style="color:white;">
+        <a class="navbar-brand" href="" style="color:white;">
             <img src="https://image.winudf.com/v2/image/dGguYWMucHN1LnNjaS5pY3QuSUNUUFNVX2ljb25fMF9mMmE1M2Zi/icon.png?w=170&fakeurl=1"
                 width="30" height="30" class="d-inline-block align-top" alt="">
             Sentiment Analysis
@@ -27,6 +27,7 @@
     </nav>
 </div>
 <div>&nbsp;</div>
+
 <div class="container">
     <ul class="nav nav-tabs">
         <li class="nav-item" role="presentiation">
@@ -44,7 +45,7 @@
                 <div class="form-row mr-3">
                     <div class="col">
 
-                        <input type="text" class="form-control" name="content" placeholder="Keywords or Hashtag">
+                        <input type="text" class="form-control" name="content" placeholder="Keywords or Hashtag" value="{{keyword}}">
                     </div>
                     <div class="col">
 
@@ -102,7 +103,16 @@
 
 
         {% else %}
-
+        <div>&nbsp;</div>
+        <div style="font-family: 'Kanit', sans-serif; font-weight: bold;">Showing result for keywords {{keyword}}</div>
+        <div>&nbsp;</div>
+        <div id="chart">
+            <embed type="image/svg+xml" src= {{ chart|safe }} style="max-width: 50%;"/>
+         </div>
+        <div>
+            
+            <a href="/download" class="btn btn-success">Dowload</a>
+        </div>
         <table class="table" style="font-family: 'Kanit', sans-serif;">
             <tr scope="row">
                 <th style="width: 50;">Tweet</th>
