@@ -1,12 +1,15 @@
 {% extends "bootstrap/base.html" %}
-
+{% block title %}
+Sentiment Analysis
+{% endblock %}
 
 
 {% block styles %}
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
     integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
-<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@100;300;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Kanit&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Pridi:wght@400;600&display=swap" rel="stylesheet">
 <!-- CSS only -->
 
 {% endblock %}
@@ -119,7 +122,8 @@
 
     <div class="col-xs-12 center-block">
         {% if tasks|length < 1 %}
-        <h4 class="text-center">Sentiment Analysis Model by ICT@PSU Senior Student</h4>
+        <img src="static/img/web-img.png" style="max-width: 30%; margin-left: auto;margin-right: auto;display: block;"/>
+        <h4 class="text-center"><br>Sentiment Analysis Model by ICT@PSU Senior Student</h4>
 
 
         {% else %}
@@ -132,8 +136,8 @@
             <a href="/download" class="btn btn-success">Dowload dataset</a>
             
         </div>
-        <embed class="mt-2" id="chart" type="image/svg+xml" src={{ chart|safe }} style="max-width: 50%;" />
-        <table class="table mt-4" style="font-family: 'Kanit', sans-serif;">
+        <embed class="mt-2" id="chart" type="image/svg+xml" src={{ chart|safe }} style="max-width: 70%;" />
+        <table class="table mt-4" style="font-family: 'Kanit', serif;">
             <tr scope="row">
                 <th style="width: 50;">Tweet</th>
                 <th style="width: 50;">Sentiment</th>
@@ -144,7 +148,7 @@
                 {% if task[1] == 1.0 %}
                 <td style="color:red;">Negative</td>
                 {% else %}
-                <td style="color:green;">positive</td>
+                <td style="color:green;">Positive</td>
                 {% endif %}
             </tr>
             {% endfor %}
